@@ -1,0 +1,4 @@
+server:
+  testport: 8887
+  port: 8080
+  address: "0.0.0.0"
