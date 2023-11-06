@@ -1,10 +1,12 @@
 package de.schmidt.ocpp.facol.config;
 
+import de.schmidt.ocpp.facol.repository.*;
 import eu.chargetime.ocpp.feature.profile.ServerCoreEventHandler;
 import eu.chargetime.ocpp.feature.profile.ServerCoreProfile;
 import eu.chargetime.ocpp.model.core.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +17,24 @@ import java.util.UUID;
 @Getter
 @Slf4j
 public class ServerCoreProfileConfig {
+
+    @Autowired
+    private ChargepointRepository chargepointRepository;
+
+    @Autowired
+    private ConnectorRepository connectorRepository;
+
+    @Autowired
+    private IdTagRepository idTagRepository;
+
+    @Autowired
+    private SessionRepository sessionRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private MeterValueRepository meterValueRepository;
 
     @Bean
     public ServerCoreEventHandler getCoreEventHandler() {

@@ -30,9 +30,7 @@ public class Session {
 
     private UUID sessionUUID;
 
-    @OneToOne(
-            cascade = CascadeType.ALL
-    )
+    @OneToOne
     @JoinColumn(
             name = "chargepoint_id",
             referencedColumnName = "chargepointId"
