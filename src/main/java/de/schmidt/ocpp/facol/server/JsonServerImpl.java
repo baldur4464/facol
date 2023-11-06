@@ -25,11 +25,7 @@ public class JsonServerImpl {
 
     @PostConstruct
     public void startServer() throws Exception {
-        OCPPMessages messageController;
 
         server.open(applicationConfiguration.getServerAddress(), applicationConfiguration.getServerPort(), serverEvents);
-        messageController = OCPPMessages.getInstance();
-        messageController.setProfile(profile);
-        messageController.setServer(server);
     }
 }
