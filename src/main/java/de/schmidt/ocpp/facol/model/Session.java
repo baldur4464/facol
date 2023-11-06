@@ -31,9 +31,7 @@ public class Session {
     private UUID sessionUUID;
 
     @OneToOne(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            optional = false
+            cascade = CascadeType.ALL
     )
     @JoinColumn(
             name = "chargepoint_id",

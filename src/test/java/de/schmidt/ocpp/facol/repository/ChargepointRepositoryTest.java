@@ -19,12 +19,9 @@ class ChargepointRepositoryTest {
     @Test
     public void addChargePoint() {
 
-        Connector connector = Connector.builder().build();
-
         Chargepoint chargepoint = Chargepoint.builder()
-                .chargepointIdentifier("test")
+                .chargepointId("ChargePointTest")
                 .chargepointVendor("test1")
-                .connectors(List.of(connector))
                 .build();
 
 

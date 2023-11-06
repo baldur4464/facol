@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 
 @Entity
 @Data
@@ -25,5 +26,33 @@ public class Transaction {
             generator = "transaction_sequence"
     )
     private Long transactionId;
-    private Long meterValue;
+
+    private ZonedDateTime startTimestamp;
+
+    private ZonedDateTime stopTimeStamp;
+
+    private Long startValue;
+
+    private Long stopValue;
+
+    @OneToOne
+    @JoinColumn(
+            name = "connector_pk",
+            referencedColumnName = "connectorPk"
+    )
+    private Connector connector;
+
+    @OneToOne
+    @JoinColumn(
+            name = "chargepoint_id",
+            referencedColumnName = "chargepointId"
+    )
+    private Chargepoint chargepoint;
+
+    @OneToOne
+    @JoinColumn(
+            name = "meter_value_id",
+            referencedColumnName = "meterValueId"
+    )
+    private MeterValue meterValue;
 }
