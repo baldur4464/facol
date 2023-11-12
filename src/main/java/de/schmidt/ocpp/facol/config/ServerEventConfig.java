@@ -1,19 +1,32 @@
 package de.schmidt.ocpp.facol.config;
 
+import de.schmidt.ocpp.facol.model.Chargepoint;
+import de.schmidt.ocpp.facol.model.Session;
+import de.schmidt.ocpp.facol.repository.ChargepointRepository;
+import de.schmidt.ocpp.facol.repository.SessionRepository;
 import eu.chargetime.ocpp.AuthenticationException;
 import eu.chargetime.ocpp.ServerEvents;
 import eu.chargetime.ocpp.model.SessionInformation;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
+import java.util.Optional;
 import java.util.UUID;
 
-@Configuration
+@Configuration ("serverEventConfig")
 @Getter
 @Slf4j
 public class ServerEventConfig {
+
+    @Autowired
+    private SessionRepository sessionRepository;
+
+    @Autowired
+    private ChargepointRepository chargepointRepository;
 
     @Bean
     public ServerEvents createServerCoreImpl() {
@@ -30,6 +43,22 @@ public class ServerEventConfig {
 
             @Override
             public void newSession(UUID sessionIndex, SessionInformation information) {
+
+                String [] split = information.getIdentifier().split("/openocpp/");
+                String chargePointIdentifier = split[1];
+
+                if(chargepointRepository.existsById(chargePointIdentifier)) {
+                    Optional<Chargepoint> chargepointOpt = chargepointRepository.findById(chargePointIdentifier);
+                    Chargepoint chargepoint = chargepointOpt.get();
+
+                    Session session = Session.builder()
+                            .sessionUuid(sessionIndex.toString())
+                            .chargepoint(chargepoint)
+                            .build();
+
+                    System.out.println("session = " + session + " wurde zur Datenbank hinzugefügt");
+                    sessionRepository.save(session);
+                }
 
                 // sessionIndex is used to send messages.
                 System.out.println("New session " + sessionIndex + ": " + information.getIdentifier());

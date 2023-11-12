@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IdTagRepository extends JpaRepository<IdTag,Long> {
+
+    IdTag findByIdTagIdentifier (String idTagIdentifier);
 }

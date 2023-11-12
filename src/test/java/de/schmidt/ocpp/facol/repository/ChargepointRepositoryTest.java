@@ -21,7 +21,6 @@ class ChargepointRepositoryTest {
 
         Chargepoint chargepoint = Chargepoint.builder()
                 .chargepointId("ChargePointTest")
-                .chargepointVendor("test1")
                 .build();
 
 

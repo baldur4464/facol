@@ -4,18 +4,26 @@ import eu.chargetime.ocpp.JSONServer;
 import eu.chargetime.ocpp.feature.profile.ServerCoreProfile;
 import eu.chargetime.ocpp.model.Request;
 import eu.chargetime.ocpp.model.core.ResetType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component("ocppMessageComponent")
+@Getter @Setter @NoArgsConstructor
 public class OCPPMessages {
 
-    private static OCPPMessages instance;
-    private static ServerCoreProfile profile;
-    private static JSONServer server;
+    private OCPPMessages instance;
+    private ServerCoreProfile profile;
+    private JSONServer server;
 
-
-    public static void SendRemoteStartTransactionMessage (UUID sessionId, int transactionId)
+    public void sendRemoteStartTransactionMessage (UUID sessionId, int transactionId)
     {
+
         Request request = profile.createRemoteStopTransactionRequest(transactionId);
         try{
             server.send(sessionId, request).whenComplete(((confirmation, throwable) -> System.out.println(confirmation)));
@@ -25,7 +33,7 @@ public class OCPPMessages {
 
     }
 
-    public void SendRemoteStopTransactionMessage (UUID sessionId, String idTag)
+    public void sendRemoteStopTransactionMessage (UUID sessionId, String idTag)
     {
         Request request = profile.createRemoteStartTransactionRequest(idTag);
         try{
@@ -36,7 +44,7 @@ public class OCPPMessages {
 
     }
 
-    public void SendSoftResetMessage (UUID sessionId)
+    public void sendSoftResetMessage (UUID sessionId)
     {
         Request request = profile.createResetRequest(ResetType.Soft);
         try{
@@ -47,7 +55,7 @@ public class OCPPMessages {
         }
     }
 
-    public void SendHardResetMessage (UUID sessionId)
+    public void sendHardResetMessage (UUID sessionId)
     {
         Request request = profile.createResetRequest(ResetType.Hard);
         try{
@@ -59,7 +67,7 @@ public class OCPPMessages {
 
     }
 
-    public void SendDataTransferMessage (UUID sessionId, String vendorId)
+    public void sendDataTransferMessage (UUID sessionId, String vendorId)
     {
         Request request = profile.createDataTransferRequest(vendorId);
         try{
@@ -69,21 +77,4 @@ public class OCPPMessages {
             e.printStackTrace();
         }
     }
-
-
-    public static OCPPMessages getInstance () {
-        if(instance == null)
-            instance = new OCPPMessages();
-        return instance;
-    }
-
-    public void setProfile(ServerCoreProfile profile) {
-        instance.profile = profile;
-    }
-
-    public static void setServer(JSONServer server) {
-        instance.server = server;
-    }
-
-    private OCPPMessages () {}
 }
