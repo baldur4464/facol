@@ -12,11 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@Configuration
+@Configuration ("serverEventConfig")
 @Getter
 @Slf4j
 public class ServerEventConfig {
@@ -44,7 +45,6 @@ public class ServerEventConfig {
             public void newSession(UUID sessionIndex, SessionInformation information) {
 
                 String [] split = information.getIdentifier().split("/openocpp/");
-                System.out.println("split = " + split[1]);
                 String chargePointIdentifier = split[1];
 
                 if(chargepointRepository.existsById(chargePointIdentifier)) {
@@ -52,10 +52,11 @@ public class ServerEventConfig {
                     Chargepoint chargepoint = chargepointOpt.get();
 
                     Session session = Session.builder()
-                            .sessionUUID(sessionIndex)
+                            .sessionUuid(sessionIndex.toString())
                             .chargepoint(chargepoint)
                             .build();
 
+                    System.out.println("session = " + session + " wurde zur Datenbank hinzugefügt");
                     sessionRepository.save(session);
                 }
 

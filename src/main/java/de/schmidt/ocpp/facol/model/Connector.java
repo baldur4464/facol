@@ -30,11 +30,13 @@ public class Connector {
     private Long connectorId;
 
     @ManyToOne(
-            cascade = CascadeType.ALL
+            cascade = CascadeType.MERGE
     )
     @JoinColumn(
             name = "chargepoint_id",
             referencedColumnName = "chargepointId"
     )
     private Chargepoint chargepoint;
+
+    private String connectorStatus;
 }

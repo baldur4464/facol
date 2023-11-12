@@ -5,10 +5,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration ("applicationConfig")
 @EnableConfigurationProperties
 @Getter
 public class ApplicationConfiguration {
+
+        public ApplicationConfiguration() {
+                System.out.println("ApplicationConfiguration geladen");
+        }
+
         @Value("${server.testport}")
         private Integer serverPort;
 
