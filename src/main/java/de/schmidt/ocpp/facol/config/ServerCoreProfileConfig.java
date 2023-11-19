@@ -6,12 +6,16 @@ import de.schmidt.ocpp.facol.model.MeterValue;
 import de.schmidt.ocpp.facol.model.Session;
 import de.schmidt.ocpp.facol.model.Transaction;
 import de.schmidt.ocpp.facol.repository.*;
+import de.schmidt.ocpp.facol.test.TestCoreProfile;
+import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
+import de.schmidt.ocpp.facol.test.model.ProfileTest;
 import eu.chargetime.ocpp.feature.profile.ServerCoreEventHandler;
 import eu.chargetime.ocpp.feature.profile.ServerCoreProfile;
 import eu.chargetime.ocpp.model.core.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -42,6 +46,9 @@ public class ServerCoreProfileConfig {
 
     @Autowired
     private MeterValueRepository meterValueRepository;
+
+    @Autowired
+    private TestCoreProfile tester;
 
     @Bean
     public ServerCoreEventHandler getCoreEventHandler() {
@@ -80,6 +87,7 @@ public class ServerCoreProfileConfig {
                 Chargepoint chargepoint = session.getChargepoint();
                 if(chargepoint != null)
                 {
+                    tester.TestBootNotificationReq(sessionIndex, request, true);
                     chargepoint.setChargepointModel(request.getChargePointModel());
                     chargepoint.setChargepointVendor(request.getChargePointVendor());
                     chargepointRepository.save(chargepoint);
@@ -88,6 +96,7 @@ public class ServerCoreProfileConfig {
                     notification.setInterval(120);
                     notification.setStatus(RegistrationStatus.Accepted);
                 }
+                tester.TestBootNotificationReq(sessionIndex, request, false);
                 return notification;
             }
 

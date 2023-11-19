@@ -1,5 +1,6 @@
 package de.schmidt.ocpp.facol.model;
 
+import com.aventstack.extentreports.ExtentReports;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,6 +36,4 @@ public class Session {
             referencedColumnName = "chargepointId"
     )
     private Chargepoint chargepoint;
-
-
 }
