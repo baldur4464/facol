@@ -14,11 +14,11 @@ import eu.chargetime.ocpp.model.SessionInformation;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,7 +59,9 @@ public class ServerEventConfig {
                     Optional<Chargepoint> chargepointOpt = chargepointRepository.findById(chargePointIdentifier);
                     Chargepoint chargepoint = chargepointOpt.get();
 
-                    ExtentSparkReporter spark = new ExtentSparkReporter("~/Documents");
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu_MM_dd_HHmmss");
+
+                    ExtentSparkReporter spark = new ExtentSparkReporter("report_"+ dtf.format(LocalDateTime.now()) + ".html");
                     ExtentReports extent = new ExtentReports();
                     extent.attachReporter(spark);
 
