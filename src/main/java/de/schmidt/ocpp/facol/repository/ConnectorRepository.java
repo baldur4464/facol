@@ -13,4 +13,6 @@ public interface ConnectorRepository extends JpaRepository<Connector, Long> {
 
     @Query("SELECT c FROM Connector c where c.chargepoint = ?1")
     List<Connector> findConnectorsByChargepointId(Chargepoint chargepoint);
+
+    Connector findConnectorByConnectorId(long id);
 }

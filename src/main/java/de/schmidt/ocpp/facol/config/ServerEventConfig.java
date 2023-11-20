@@ -61,11 +61,11 @@ public class ServerEventConfig {
 
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu_MM_dd_HHmmss");
 
-                    ExtentSparkReporter spark = new ExtentSparkReporter("report_"+ dtf.format(LocalDateTime.now()) + ".html");
+                    ExtentSparkReporter spark = new ExtentSparkReporter("reports/report_" + dtf.format(LocalDateTime.now())  +  ".html");
                     ExtentReports extent = new ExtentReports();
                     extent.attachReporter(spark);
 
-                    ProfileTest newProfileTest = new ProfileTest(extent, sessionIndex);
+                    ProfileTest newProfileTest = new ProfileTest(extent, sessionIndex, false);
                     profileTestController.addProfileTest(newProfileTest);
 
                     Session session = Session.builder()

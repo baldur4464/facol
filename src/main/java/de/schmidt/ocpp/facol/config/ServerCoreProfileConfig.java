@@ -4,6 +4,7 @@ import de.schmidt.ocpp.facol.model.Chargepoint;
 import de.schmidt.ocpp.facol.model.Connector;
 import de.schmidt.ocpp.facol.model.MeterValue;
 import de.schmidt.ocpp.facol.model.Session;
+import de.schmidt.ocpp.facol.model.SampledValue;
 import de.schmidt.ocpp.facol.model.Transaction;
 import de.schmidt.ocpp.facol.repository.*;
 import de.schmidt.ocpp.facol.test.TestCoreProfile;
@@ -15,11 +16,11 @@ import eu.chargetime.ocpp.model.core.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,7 +49,13 @@ public class ServerCoreProfileConfig {
     private MeterValueRepository meterValueRepository;
 
     @Autowired
+    private SampledValueRepository sampledValueRepository;
+
+    @Autowired
     private TestCoreProfile tester;
+
+    @Autowired
+    private ProfileTestController testController;
 
     @Bean
     public ServerCoreEventHandler getCoreEventHandler() {
@@ -83,11 +90,12 @@ public class ServerCoreProfileConfig {
                 notification.setStatus(RegistrationStatus.Rejected);
 
                 Session session = sessionRepository.findSessionBySessionUuid(sessionIndex.toString());
+                ProfileTest profiletest = testController.getProfileTestBySessionUuid(UUID.fromString(session.getSessionUuid()));
 
                 Chargepoint chargepoint = session.getChargepoint();
                 if(chargepoint != null)
                 {
-                    tester.TestBootNotificationReq(sessionIndex, request, true);
+                    tester.testBootNotificationReq(sessionIndex, request, profiletest.isCanTest());
                     chargepoint.setChargepointModel(request.getChargePointModel());
                     chargepoint.setChargepointVendor(request.getChargePointVendor());
                     chargepointRepository.save(chargepoint);
@@ -96,7 +104,6 @@ public class ServerCoreProfileConfig {
                     notification.setInterval(120);
                     notification.setStatus(RegistrationStatus.Accepted);
                 }
-                tester.TestBootNotificationReq(sessionIndex, request, false);
                 return notification;
             }
 
@@ -118,12 +125,60 @@ public class ServerCoreProfileConfig {
 
             @Override
             public MeterValuesConfirmation handleMeterValuesRequest(UUID sessionIndex, MeterValuesRequest request) {
-                Transaction transaction;
-                Optional<Transaction> transactionOpt = transactionRepository.findById(Long.valueOf(request.getTransactionId()));
-                if(transactionOpt.isPresent())
+
+                MeterValue metervalue = null;
+
+                for(eu.chargetime.ocpp.model.core.MeterValue ocppMeterValue: request.getMeterValue())
                 {
-                    transaction = transactionOpt.get();
-                    MeterValue meterValue = transaction.getMeterValue();
+                    List<SampledValue> sampledValues = new ArrayList<>();
+
+                    for(eu.chargetime.ocpp.model.core.SampledValue ocppSampledValue: ocppMeterValue.getSampledValue())
+                    {
+                         SampledValue sampledValue = SampledValue.builder()
+                                 .rawValue(Long.valueOf(ocppSampledValue.getValue()))
+                                 .phase(ocppSampledValue.getPhase())
+                                 .valueFormat(ocppSampledValue.getFormat().name())
+                                 .location(ocppSampledValue.getLocation().name())
+                                 .context(ocppSampledValue.getContext())
+                                 .measurand(ocppSampledValue.getMeasurand())
+                                 .unitOfMeasure(ocppSampledValue.getPhase())
+                                 .build();
+
+                         sampledValue = sampledValueRepository.save(sampledValue);
+
+                         sampledValues.add(sampledValue);
+                    }
+
+                    Connector connector = connectorRepository.findConnectorByConnectorId(Long.valueOf(request.getConnectorId()));
+
+                    if(connector != null) {
+
+                        metervalue = MeterValue.builder()
+                                .connector(connector)
+                                .sampledValue(sampledValues)
+                                .build();
+                        metervalue = meterValueRepository.save(metervalue);
+                    }
+
+                    if(request.getTransactionId() != null)
+                    {
+                        Optional<Transaction> optTransaction = transactionRepository.findById(Long.valueOf(request.getTransactionId()));
+                        if(optTransaction.isPresent() && metervalue != null)
+                        {
+                            Transaction transaction = optTransaction.get();
+                            List<MeterValue> meterValues;
+                            if(transaction.getMeterValues() == null){
+                                meterValues = new ArrayList<>();
+                            } else {
+                                meterValues = transaction.getMeterValues();
+                            }
+
+                            meterValues.add(metervalue);
+                            transaction.setMeterValues(meterValues);
+                            transactionRepository.save(transaction);
+                        }
+                    }
+
                 }
 
                 return new MeterValuesConfirmation(); // returning null means unsupported feature
@@ -151,17 +206,10 @@ public class ServerCoreProfileConfig {
                     for(Connector connector: connectors) {
                         if(connector.getConnectorId().equals(Long.valueOf(request.getConnectorId())))
                         {
-                            MeterValue meterValue = MeterValue.builder()
-                                    .meterValue(0l)
-                                    .meterValueTimestamp(ZonedDateTime.now())
-                                    .build();
-                            meterValueRepository.save(meterValue);
-
                             Transaction transaction = Transaction.builder()
                                     .startValue(Long.valueOf(request.getMeterStart()))
                                     .startTimestamp(request.getTimestamp())
                                     .connector(connector)
-                                    .meterValue(meterValue)
                                     .chargepoint(connector.getChargepoint())
                                     .build();
                             Transaction savedTransaction = transactionRepository.save(transaction);
@@ -222,10 +270,6 @@ public class ServerCoreProfileConfig {
                     if(request.getTransactionId().equals(transaction.getTransactionId().intValue())) {
                         transaction.setStopValue(Long.valueOf(request.getMeterStop()));
                         transaction.setStopTimeStamp(request.getTimestamp());
-
-                        MeterValue meterValue = transaction.getMeterValue();
-                        meterValue.setMeterValue(transaction.getStopValue()-transaction.getStartValue());
-                        meterValueRepository.save(meterValue);
                         transactionRepository.save(transaction);
                     }
                 }
