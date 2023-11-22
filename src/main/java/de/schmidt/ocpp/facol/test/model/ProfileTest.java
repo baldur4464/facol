@@ -16,26 +16,19 @@ public class ProfileTest {
 
     private UUID session;
 
-    private boolean canTest;
+    String idTag;
 
-    private boolean isBootNotificationTested = false;
+    String chargepointIdentifier;
 
-    private boolean isRemoteStartTransactionTested = false;
+    long transactionId;
 
-    private boolean isRemoteStopTransactionTested = false;
+    long connectorId;
 
-    private boolean isHeartbeatTested = false;
 
-    private boolean isStatusNotificationTested = false;
 
-    private boolean isTriggerMessageTested = false;
-
-    private boolean isAuhorizeTested = false;
-
-    public ProfileTest (ExtentReports reporter, UUID sessionIndex, boolean canTest) {
+    public ProfileTest (ExtentReports reporter, UUID sessionIndex) {
         this.reporter = reporter;
         this.session = sessionIndex;
-        this.canTest = canTest;
     }
 
 }

@@ -32,7 +32,6 @@ public class ProfileTestController {
     }
 
     public void updateProfileTest (int index, ProfileTest test){
-        profileTests.get(index).setCanTest(test.isCanTest());
         profileTests.get(index).setReporter(test.getReporter());
         profileTests.get(index).setSession(test.getSession());
     }

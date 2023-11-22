@@ -30,7 +30,7 @@ public class Session {
 
     private String sessionUuid;
 
-    @OneToOne
+    @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn(
             name = "chargepoint_id",
             referencedColumnName = "chargepointId"

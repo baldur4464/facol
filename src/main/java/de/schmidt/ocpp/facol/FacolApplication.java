@@ -5,6 +5,7 @@ import de.schmidt.ocpp.facol.repository.SessionRepository;
 import de.schmidt.ocpp.facol.test.TestCoreProfile;
 import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
 import de.schmidt.ocpp.facol.test.model.ProfileTest;
+import eu.chargetime.ocpp.JSONServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,20 +20,18 @@ import java.util.UUID;
 public class FacolApplication
 {
 
-    @Autowired
-    private TestCoreProfile tTestCore;
     private static TestCoreProfile testCore;
+    private static ProfileTestController testController;
+    private static SessionRepository sessionRepo;
 
     @Autowired
-    private SessionRepository tSessionRepo;
-    private static SessionRepository sessionRepo;
+    private TestCoreProfile tTestCore;
 
     @Autowired
     private ProfileTestController tTestController;
 
-    private static ProfileTestController testController;
-
-
+    @Autowired
+    private SessionRepository tSessionRepo;
 
     public static void main(String[] args)
     {
@@ -42,9 +41,10 @@ public class FacolApplication
 
         while(true) {
 
+
             List<Session> sessions = sessionRepo.findAll();
 
-            if(sessions != null  && sessions.size() != 0) {
+            if(sessions.size() != 0) {
                 System.out.println("Wähle ein verfügbare Session zum Testen: ");
                 for (int i = 0; i < sessions.size(); i++) {
                     System.out.println("[" + i + "]" + " " + sessions.get(i).getSessionUuid().toString() + " : " + sessions.get(i).getChargepoint().getChargepointId());
@@ -57,27 +57,44 @@ public class FacolApplication
                     e.printStackTrace();
                 }
 
-                if(auswahl >= 0) {
+                if(auswahl >= 0 && auswahl >= sessions.size() - 1 ) {
                     Session session = sessions.get(auswahl);
                     ProfileTest profileTest = testController.getProfileTestBySessionUuid(UUID.fromString(session.getSessionUuid()));
-                    testCore.testRemoteStartTransactionConf(UUID.fromString(session.getSessionUuid()), profileTest.isCanTest());
-                    //testCore.testRemoteStopTransactionConf();
-                    profileTest.getReporter().flush();
+                    testController.updateProfileTest(auswahl, profileTest);
+
+                    testCore.testRemoteStartTransactionConf(UUID.fromString(session.getSessionUuid()));
+                    sleep(10000);
+                    testCore.testRemoteStopTransactionConf(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testCore.testChangeAvailabilityConf(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testCore.testChangeConfigurationConf(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testCore.testGetConfigurationConf(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testCore.testClearCacheConf(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testCore.testUnlockConnectorConf(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
                 }
             }
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            sleep(5000);
         }
     }
 
     @PostConstruct
     public void init() {
         FacolApplication.testCore = tTestCore;
-        FacolApplication.sessionRepo = tSessionRepo;
         FacolApplication.testController = tTestController;
+        FacolApplication.sessionRepo = tSessionRepo;
+    }
+
+    private static void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

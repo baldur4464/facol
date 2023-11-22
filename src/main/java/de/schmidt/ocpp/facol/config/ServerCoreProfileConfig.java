@@ -71,6 +71,8 @@ public class ServerCoreProfileConfig {
                 idTagInfo.setParentIdTag("");
                 idTagInfo.setStatus(AuthorizationStatus.Invalid);
 
+                tester.testAuthorizeReq(sessionIndex, request);
+
                 if(idTagRepository.findByIdTagIdentifier(request.getIdTag()) != null) {
                     idTagInfo.setExpiryDate(ZonedDateTime.now());
                     idTagInfo.setParentIdTag("");
@@ -90,12 +92,11 @@ public class ServerCoreProfileConfig {
                 notification.setStatus(RegistrationStatus.Rejected);
 
                 Session session = sessionRepository.findSessionBySessionUuid(sessionIndex.toString());
-                ProfileTest profiletest = testController.getProfileTestBySessionUuid(UUID.fromString(session.getSessionUuid()));
 
                 Chargepoint chargepoint = session.getChargepoint();
-                if(chargepoint != null)
-                {
-                    tester.testBootNotificationReq(sessionIndex, request, profiletest.isCanTest());
+                if(chargepoint != null) {
+                    tester.testBootNotificationReq(sessionIndex, request);
+
                     chargepoint.setChargepointModel(request.getChargePointModel());
                     chargepoint.setChargepointVendor(request.getChargePointVendor());
                     chargepointRepository.save(chargepoint);
@@ -120,6 +121,8 @@ public class ServerCoreProfileConfig {
 
                 System.out.println(request);
 
+                tester.testHeartbeatReq(sessionIndex, request);
+
                 return new HeartbeatConfirmation(); // returning null means unsupported feature
             }
 
@@ -127,6 +130,8 @@ public class ServerCoreProfileConfig {
             public MeterValuesConfirmation handleMeterValuesRequest(UUID sessionIndex, MeterValuesRequest request) {
 
                 MeterValue metervalue = null;
+
+                tester.testMeterValueReq(sessionIndex, request);
 
                 for(eu.chargetime.ocpp.model.core.MeterValue ocppMeterValue: request.getMeterValue())
                 {
@@ -203,6 +208,10 @@ public class ServerCoreProfileConfig {
 
                     List<Connector> connectors = connectorRepository.findConnectorsByChargepointId(session.getChargepoint());
 
+                    ProfileTest test = testController.getProfileTestBySessionUuid(sessionIndex);
+                    test.setConnectorId(request.getConnectorId());
+                    tester.testStartTransactionReq(sessionIndex, request);
+
                     for(Connector connector: connectors) {
                         if(connector.getConnectorId().equals(Long.valueOf(request.getConnectorId())))
                         {
@@ -213,6 +222,8 @@ public class ServerCoreProfileConfig {
                                     .chargepoint(connector.getChargepoint())
                                     .build();
                             Transaction savedTransaction = transactionRepository.save(transaction);
+
+                            test.setTransactionId(savedTransaction.getTransactionId());
 
                             idTagInfo.setExpiryDate(ZonedDateTime.now());
                             idTagInfo.setParentIdTag("");
@@ -235,6 +246,8 @@ public class ServerCoreProfileConfig {
 
                 Session session = sessionRepository.findSessionBySessionUuid(sessionIndex.toString());
                 List<Connector> connectors = connectorRepository.findConnectorsByChargepointId(session.getChargepoint());
+
+                tester.testStatusNotificationReq(sessionIndex, request);
 
                 for (Connector connector: connectors) {
                     if(connector.getConnectorId() == Long.valueOf(request.getConnectorId())){
@@ -268,6 +281,8 @@ public class ServerCoreProfileConfig {
                     Transaction transaction = transactionOpt.get();
 
                     if(request.getTransactionId().equals(transaction.getTransactionId().intValue())) {
+                        tester.testStopTransactionReq(sessionIndex, request);
+
                         transaction.setStopValue(Long.valueOf(request.getMeterStop()));
                         transaction.setStopTimeStamp(request.getTimestamp());
                         transactionRepository.save(transaction);
@@ -281,6 +296,10 @@ public class ServerCoreProfileConfig {
                 transactionConfirmation.setIdTagInfo(idTagInfo);
 
                 return transactionConfirmation;
+            }
+
+            public UnlockConnectorConfirmation handleUnlockRequest(UUID sessionIndex, UnlockConnectorRequest request) {
+                return null;
             }
         };
     }

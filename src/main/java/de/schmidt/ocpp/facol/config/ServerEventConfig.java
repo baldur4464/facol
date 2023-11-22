@@ -65,7 +65,12 @@ public class ServerEventConfig {
                     ExtentReports extent = new ExtentReports();
                     extent.attachReporter(spark);
 
-                    ProfileTest newProfileTest = new ProfileTest(extent, sessionIndex, false);
+                    ProfileTest newProfileTest = ProfileTest.builder()
+                            .session(sessionIndex)
+                            .idTag("zero")
+                            .chargepointIdentifier(chargepoint.getChargepointId())
+                            .reporter(extent)
+                            .build();
                     profileTestController.addProfileTest(newProfileTest);
 
                     Session session = Session.builder()
