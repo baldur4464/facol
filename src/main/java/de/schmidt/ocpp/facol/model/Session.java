@@ -1,5 +1,6 @@
 package de.schmidt.ocpp.facol.model;
 
+import com.aventstack.extentreports.ExtentReports;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,12 +30,10 @@ public class Session {
 
     private String sessionUuid;
 
-    @OneToOne
+    @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn(
             name = "chargepoint_id",
             referencedColumnName = "chargepointId"
     )
     private Chargepoint chargepoint;
-
-
 }

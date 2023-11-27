@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -27,7 +28,13 @@ public class MeterValue {
     )
     private Long meterValueId;
 
-    private ZonedDateTime meterValueTimestamp;
+    @OneToOne
+    @JoinColumn(
+            name = "connector_id",
+            referencedColumnName = "connectorPk"
+    )
+    private Connector connector;
 
-    private Long meterValue;
+    @OneToMany (cascade = CascadeType.MERGE)
+    private List<SampledValue> sampledValue;
 }
