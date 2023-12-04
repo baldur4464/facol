@@ -12,9 +12,9 @@ import java.util.UUID;
 @Getter @Setter @Builder
 public class ProfileTestController {
 
+    private int count;
+
     private List<ProfileTest> profileTests;
-
-
 
     public ProfileTest getProfileTestBySessionUuid (UUID sessionUuid) {
 
@@ -28,11 +28,16 @@ public class ProfileTestController {
     }
 
     public void addProfileTest (ProfileTest test) {
+        test.setTestId(count);
         profileTests.add(test);
     }
 
-    public void updateProfileTest (int index, ProfileTest test){
-        profileTests.get(index).setReporter(test.getReporter());
-        profileTests.get(index).setSession(test.getSession());
+    public void updateProfileTest (ProfileTest test){
+        profileTests.get(test.getTestId()).setReporter(test.getReporter());
+        profileTests.get(test.getTestId()).setSession(test.getSession());
+        profileTests.get(test.getTestId()).setConnectorId(test.getConnectorId());
+        profileTests.get(test.getTestId()).setChargepointIdentifier(test.getChargepointIdentifier());
+        profileTests.get(test.getTestId()).setTransactionId(test.getTransactionId());
+        profileTests.get(test.getTestId()).setIdTag(test.getIdTag());
     }
 }

@@ -12,17 +12,19 @@ import java.util.UUID;
 @Setter @Getter @Builder
 public class ProfileTest {
 
+    private int testId;
+
     private ExtentReports reporter;
 
     private UUID session;
 
-    String idTag;
+    private String idTag;
 
-    String chargepointIdentifier;
+    private String chargepointIdentifier;
 
-    long transactionId;
+    private long transactionId;
 
-    long connectorId;
+    private long connectorId;
 
 
 
