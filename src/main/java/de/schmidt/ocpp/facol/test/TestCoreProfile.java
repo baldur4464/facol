@@ -12,6 +12,8 @@ import eu.chargetime.ocpp.NotConnectedException;
 import eu.chargetime.ocpp.OccurenceConstraintException;
 import eu.chargetime.ocpp.UnsupportedFeatureException;
 import eu.chargetime.ocpp.model.core.*;
+import eu.chargetime.ocpp.model.remotetrigger.TriggerMessageRequest;
+import eu.chargetime.ocpp.model.remotetrigger.TriggerMessageRequestType;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -101,7 +103,19 @@ public class TestCoreProfile {
         ExtentTest test = reporter.createTest("Test StartTransaction.req");
 
         if (request.getConnectorId() != null && request.getMeterStart() != null && request.getIdTag() != null && request.getTimestamp() != null) {
-            Chargepoint chargepoint = sessionRepo.findSessionBySessionUuid(sessionIndex.toString()).getChargepoint();
+            if(request.getConnectorId() == profileTest.getConnectorId()) {
+                test.pass("Correct Connector ID");
+            } else {
+                test.fail("Wrong Connector ID");
+            }
+
+            if(request.getIdTag().equals(profileTest.getIdTag()))
+            {
+                test.pass("Correct IdTag");
+            } else {
+                test.fail("Wrong IdTag");
+            }
+
             test.pass(request.toString());
         } else {
             test.fail(" The requirments were not met: " + request.toString());
@@ -129,6 +143,14 @@ public class TestCoreProfile {
         ExtentTest test = reporter.createTest("Test StopTransaction.req");
 
         if(request.getMeterStop() != null && request.getTimestamp() != null && request.getTransactionId() != 0) {
+
+            if(request.getTransactionId() == profileTest.getTransactionId())
+            {
+                test.pass("Correct TransactionId");
+            } else {
+                test.fail("Wrong TransactionId: " + request.getTransactionId() +  " instead of " + profileTest.getTransactionId());
+            }
+
             test.pass(request.toString());
         } else {
             test.fail(request.toString());
@@ -216,6 +238,10 @@ public class TestCoreProfile {
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test RemoteStartTransaction.conf");
         RemoteStartTransactionRequest request = new RemoteStartTransactionRequest("zero");
+
+        profileTest.setConnectorId(1);
+        testController.updateProfileTest(profileTest);
+
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
                 if(confirmation.toString().contains("Accepted"))
@@ -241,7 +267,7 @@ public class TestCoreProfile {
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test RemoteStoptransaction.conf");
 
-        RemoteStopTransactionRequest request = new RemoteStopTransactionRequest((int) profileTest.getTransactionId());
+        RemoteStopTransactionRequest request = new RemoteStopTransactionRequest((int)profileTest.getTransactionId());
 
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
@@ -363,7 +389,7 @@ public class TestCoreProfile {
 
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
-                System.out.println(sessionIndex);
+                System.out.println(confirmation);
                 test.pass(confirmation.toString());
             });
         } catch (OccurenceConstraintException e) {

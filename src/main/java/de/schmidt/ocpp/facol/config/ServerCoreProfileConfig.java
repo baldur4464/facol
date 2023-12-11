@@ -205,11 +205,9 @@ public class ServerCoreProfileConfig {
 
                 if(idTagRepository.findByIdTagIdentifier(request.getIdTag()) != null) {
                     Session session = sessionRepository.findSessionBySessionUuid(sessionIndex.toString());
-
                     List<Connector> connectors = connectorRepository.findConnectorsByChargepointId(session.getChargepoint());
-
                     ProfileTest test = testController.getProfileTestBySessionUuid(sessionIndex);
-                    test.setConnectorId(request.getConnectorId());
+
                     tester.testStartTransactionReq(sessionIndex, request);
 
                     for(Connector connector: connectors) {
