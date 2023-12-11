@@ -22,7 +22,7 @@ import java.util.UUID;
 public class TestRemoteTriggerProfile {
 
     @Autowired
-   private ProfileTestController testController;
+    private ProfileTestController testController;
 
     @Autowired
     private JSONServer server;
@@ -42,7 +42,6 @@ public class TestRemoteTriggerProfile {
         ExtentTest test = reporter.createTest("Test Bootnotification Triggermessage.conf");
 
         TriggerMessageRequest request = new TriggerMessageRequest(TriggerMessageRequestType.BootNotification);
-
 
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {

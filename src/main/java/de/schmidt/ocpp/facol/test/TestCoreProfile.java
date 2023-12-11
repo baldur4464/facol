@@ -267,7 +267,7 @@ public class TestCoreProfile {
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test RemoteStoptransaction.conf");
 
-        RemoteStopTransactionRequest request = new RemoteStopTransactionRequest((int) profileTest.getTransactionId());
+        RemoteStopTransactionRequest request = new RemoteStopTransactionRequest((int)profileTest.getTransactionId());
 
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {

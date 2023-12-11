@@ -4,9 +4,11 @@ import de.schmidt.ocpp.facol.model.Session;
 import de.schmidt.ocpp.facol.repository.SessionRepository;
 import de.schmidt.ocpp.facol.test.TestCoreProfile;
 import de.schmidt.ocpp.facol.test.TestRemoteTriggerProfile;
+import de.schmidt.ocpp.facol.test.TestReservationProfile;
 import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
 import de.schmidt.ocpp.facol.test.model.ProfileTest;
 import eu.chargetime.ocpp.JSONServer;
+import eu.chargetime.ocpp.feature.profile.ServerRemoteTriggerProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,8 +26,10 @@ public class FacolApplication
     private static TestCoreProfile testCore;
 
     private static TestRemoteTriggerProfile testRemote;
-    private static ProfileTestController testController;
+
     private static SessionRepository sessionRepo;
+
+    private static TestReservationProfile testReservation;
 
     @Autowired
     private TestCoreProfile tTestCore;
@@ -34,16 +38,19 @@ public class FacolApplication
     private TestRemoteTriggerProfile tTestRemote;
 
     @Autowired
-    private ProfileTestController tTestController;
+    private SessionRepository tSessionRepo;
 
     @Autowired
-    private SessionRepository tSessionRepo;
+    private TestReservationProfile tTestReservation;
 
     public static void main(String[] args)
     {
         SpringApplication.run(FacolApplication.class, args);
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int auswahl = -1;
+
+
+
 
         while(true) {
 
@@ -66,6 +73,7 @@ public class FacolApplication
                 if(auswahl >= 0 && auswahl >= sessions.size() - 1 ) {
                     Session session = sessions.get(auswahl);
 
+
                     testCore.testRemoteStartTransactionConf(UUID.fromString(session.getSessionUuid()));
                     sleep(10000);
                     testCore.testRemoteStopTransactionConf(UUID.fromString(session.getSessionUuid()));
@@ -80,6 +88,8 @@ public class FacolApplication
                     sleep(1000);
                     testCore.testUnlockConnectorConf(UUID.fromString(session.getSessionUuid()));
                     sleep(1000);
+
+
 
                     //Remote Trigger
                     testRemote.testTriggerBootnotification(UUID.fromString(session.getSessionUuid()));
@@ -98,7 +108,9 @@ public class FacolApplication
                     //Local Auth List Management
 
                     //Reservation
-
+                    testReservation.testReservationNow(UUID.fromString(session.getSessionUuid()));
+                    sleep(10000);
+                    testReservation.testCancelReservation(UUID.fromString(session.getSessionUuid()));
                     //Firmware Management
 
                     //Smart Charging
@@ -111,9 +123,9 @@ public class FacolApplication
     @PostConstruct
     public void init() {
         FacolApplication.testCore = tTestCore;
-        FacolApplication.testController = tTestController;
         FacolApplication.sessionRepo = tSessionRepo;
         FacolApplication.testRemote = tTestRemote;
+        FacolApplication.testReservation = tTestReservation;
     }
 
     private static void sleep(int millis) {
