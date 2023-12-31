@@ -30,19 +30,19 @@
         <dependency>
             <groupId>eu.chargetime.ocpp</groupId>
             <artifactId>v1_6</artifactId>
-            <version>1.2.0</version>
+            <version>1.1.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/eu.chargetime.ocpp/common -->
         <dependency>
             <groupId>eu.chargetime.ocpp</groupId>
             <artifactId>common</artifactId>
-            <version>1.2.0</version>
+            <version>1.0.2</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/eu.chargetime.ocpp/OCPP-J -->
         <dependency>
             <groupId>eu.chargetime.ocpp</groupId>
             <artifactId>OCPP-J</artifactId>
-            <version>1.2.0</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

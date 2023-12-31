@@ -116,8 +116,8 @@ public class FacolApplication
                     sleep(1000);
                     testLocalAuthList.testGetLocalListVersion(UUID.fromString(session.getSessionUuid()));
                     sleep(1000);
-                    testLocalAuthList.testSendLocalListClearList(UUID.fromString(session.getSessionUuid()));
-                    sleep(1000);
+                    //testLocalAuthList.testSendLocalListClearList(UUID.fromString(session.getSessionUuid()));
+                    //sleep(1000);
                     testLocalAuthList.testGetLocalListVersion(UUID.fromString(session.getSessionUuid()));
                     sleep(1000);
 

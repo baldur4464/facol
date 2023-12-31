@@ -77,6 +77,7 @@ public class TestLocalAuthListProfile {
         reporter.flush();
     }
 
+    /* Dieser Test funktioniert nur mit Java-OCA-OCPP 1.2
     public void testSendLocalListClearList(UUID sessionIndex) {
 
         ProfileTest profileTest = testController.getProfileTestBySessionUuid(sessionIndex);
@@ -101,6 +102,7 @@ public class TestLocalAuthListProfile {
         reporter.flush();
     }
 
+     */
     public void testGetLocalListVersion(UUID sessionIndex) {
 
         ProfileTest profileTest = testController.getProfileTestBySessionUuid(sessionIndex);
