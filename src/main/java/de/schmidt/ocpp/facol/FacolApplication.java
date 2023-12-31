@@ -3,6 +3,7 @@ package de.schmidt.ocpp.facol;
 import de.schmidt.ocpp.facol.model.Session;
 import de.schmidt.ocpp.facol.repository.SessionRepository;
 import de.schmidt.ocpp.facol.test.TestCoreProfile;
+import de.schmidt.ocpp.facol.test.TestLocalAuthListProfile;
 import de.schmidt.ocpp.facol.test.TestRemoteTriggerProfile;
 import de.schmidt.ocpp.facol.test.TestReservationProfile;
 import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
@@ -31,6 +32,8 @@ public class FacolApplication
 
     private static TestReservationProfile testReservation;
 
+    private static TestLocalAuthListProfile testLocalAuthList;
+
     @Autowired
     private TestCoreProfile tTestCore;
 
@@ -42,6 +45,9 @@ public class FacolApplication
 
     @Autowired
     private TestReservationProfile tTestReservation;
+
+    @Autowired
+    private TestLocalAuthListProfile tTestAuthList;
 
     public static void main(String[] args)
     {
@@ -106,14 +112,24 @@ public class FacolApplication
                     sleep(1000);
 
                     //Local Auth List Management
+                    testLocalAuthList.testSendLocalList(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testLocalAuthList.testGetLocalListVersion(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testLocalAuthList.testSendLocalListClearList(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testLocalAuthList.testGetLocalListVersion(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+
 
                     //Reservation
                     testReservation.testReservationNow(UUID.fromString(session.getSessionUuid()));
-                    sleep(10000);
+                    sleep(5000);
                     testReservation.testCancelReservation(UUID.fromString(session.getSessionUuid()));
                     //Firmware Management
 
                     //Smart Charging
+
                 }
             }
             sleep(5000);
@@ -126,6 +142,7 @@ public class FacolApplication
         FacolApplication.sessionRepo = tSessionRepo;
         FacolApplication.testRemote = tTestRemote;
         FacolApplication.testReservation = tTestReservation;
+        FacolApplication.testLocalAuthList = tTestAuthList;
     }
 
     private static void sleep(int millis) {
