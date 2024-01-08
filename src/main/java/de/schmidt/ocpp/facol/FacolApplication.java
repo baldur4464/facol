@@ -2,10 +2,7 @@ package de.schmidt.ocpp.facol;
 
 import de.schmidt.ocpp.facol.model.Session;
 import de.schmidt.ocpp.facol.repository.SessionRepository;
-import de.schmidt.ocpp.facol.test.TestCoreProfile;
-import de.schmidt.ocpp.facol.test.TestLocalAuthListProfile;
-import de.schmidt.ocpp.facol.test.TestRemoteTriggerProfile;
-import de.schmidt.ocpp.facol.test.TestReservationProfile;
+import de.schmidt.ocpp.facol.test.*;
 import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
 import de.schmidt.ocpp.facol.test.model.ProfileTest;
 import eu.chargetime.ocpp.JSONServer;
@@ -34,6 +31,8 @@ public class FacolApplication
 
     private static TestLocalAuthListProfile testLocalAuthList;
 
+    private static TestSmartChargingProfile testSmartCharging;
+
     @Autowired
     private TestCoreProfile tTestCore;
 
@@ -48,6 +47,9 @@ public class FacolApplication
 
     @Autowired
     private TestLocalAuthListProfile tTestAuthList;
+
+    @Autowired
+    private TestSmartChargingProfile tTestSmartCharging;
 
     public static void main(String[] args)
     {
@@ -95,8 +97,6 @@ public class FacolApplication
                     testCore.testUnlockConnectorConf(UUID.fromString(session.getSessionUuid()));
                     sleep(1000);
 
-
-
                     //Remote Trigger
                     testRemote.testTriggerBootnotification(UUID.fromString(session.getSessionUuid()));
                     sleep(1000);
@@ -129,7 +129,12 @@ public class FacolApplication
                     //Firmware Management
 
                     //Smart Charging
-
+                    testSmartCharging.testSetChargingProfile(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testSmartCharging.testGetCompositeSchedule(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testSmartCharging.testClearChargingProfile(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
                 }
             }
             sleep(5000);
@@ -143,6 +148,7 @@ public class FacolApplication
         FacolApplication.testRemote = tTestRemote;
         FacolApplication.testReservation = tTestReservation;
         FacolApplication.testLocalAuthList = tTestAuthList;
+        FacolApplication.testSmartCharging = tTestSmartCharging;
     }
 
     private static void sleep(int millis) {
