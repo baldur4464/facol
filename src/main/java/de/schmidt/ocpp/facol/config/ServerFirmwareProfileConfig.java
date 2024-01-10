@@ -20,6 +20,14 @@ import java.util.UUID;
 public class ServerFirmwareProfileConfig {
 
 
+    private TestFirmwareManagementProfile tester;
+
+    //Setter Injection
+    @Autowired
+    public void setTester(@Lazy TestFirmwareManagementProfile tester){
+        this.tester = tester;
+    }
+
     @Bean
     public ServerFirmwareManagementEventHandler getFirmwareManagementEventHandler() {
         return new ServerFirmwareManagementEventHandler() {

@@ -36,6 +36,7 @@ public class TestFirmwareManagementProfile {
     @Autowired
     private ConnectorRepository connectorRepo;
 
+    //Setter Injection
 
     //Requests
     public void testDiagnosticStatusReq(UUID sessionIndex, DiagnosticsStatusNotificationRequest request)
