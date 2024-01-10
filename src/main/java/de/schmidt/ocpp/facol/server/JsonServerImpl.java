@@ -23,7 +23,7 @@ public class JsonServerImpl {
 
     @PostConstruct
     public void startServer() throws Exception {
-        server.open(applicationConfiguration.getServerAddress(), applicationConfiguration.getServerPort(), serverEvents);
+        server.open("localhost", applicationConfiguration.getServerPort(), serverEvents);
     }
 }
 
