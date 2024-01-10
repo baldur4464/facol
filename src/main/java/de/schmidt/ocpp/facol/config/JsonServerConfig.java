@@ -6,21 +6,22 @@ import eu.chargetime.ocpp.feature.profile.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration("jsonServerConfig")
 @Slf4j
 public class JsonServerConfig {
 
     @Bean
-    public JSONServer jsonServer(ServerCoreProfile core) {
+    public JSONServer jsonServer(ServerCoreProfile core, ServerFirmwareManagementProfile firmware) {
 
         JSONServer server = new JSONServer(core);
         server.addFeatureProfile(new ServerRemoteTriggerProfile());
         server.addFeatureProfile(new ServerReservationProfile());
         server.addFeatureProfile(new ServerLocalAuthListProfile());
         server.addFeatureProfile(new ServerSmartChargingProfile());
+        server.addFeatureProfile(firmware);
 
         return server;
     }
-
 }

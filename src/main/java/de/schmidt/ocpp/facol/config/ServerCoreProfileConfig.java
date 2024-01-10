@@ -295,10 +295,6 @@ public class ServerCoreProfileConfig {
 
                 return transactionConfirmation;
             }
-
-            public UnlockConnectorConfirmation handleUnlockRequest(UUID sessionIndex, UnlockConnectorRequest request) {
-                return null;
-            }
         };
     }
 

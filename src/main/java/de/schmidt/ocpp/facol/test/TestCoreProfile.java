@@ -2,7 +2,7 @@ package de.schmidt.ocpp.facol.test;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import de.schmidt.ocpp.facol.model.Chargepoint;
+
 import de.schmidt.ocpp.facol.repository.ConnectorRepository;
 import de.schmidt.ocpp.facol.repository.SessionRepository;
 import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
@@ -12,8 +12,7 @@ import eu.chargetime.ocpp.NotConnectedException;
 import eu.chargetime.ocpp.OccurenceConstraintException;
 import eu.chargetime.ocpp.UnsupportedFeatureException;
 import eu.chargetime.ocpp.model.core.*;
-import eu.chargetime.ocpp.model.remotetrigger.TriggerMessageRequest;
-import eu.chargetime.ocpp.model.remotetrigger.TriggerMessageRequestType;
+
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
