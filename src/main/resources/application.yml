@@ -1,17 +1,4 @@
 server:
-  port: 8887
-spring:
-  datasource:
-    #docker pull mariadb
-    #docker create mariadb --name mariadb-ocpp -i -t
-    #docker run -d --name mariadb-ocpp -p 3306:3306 -e "MARIADB_ROOT_PASSWORD=root" -e "MARIADB_DATABASE=ocppdb" -e "MARIADB_USER=root" -e "MARIADB_PASSWORD=root"
-    url: jdbc:mariadb://localhost:3306/ocppdb
-    username: root
-    password: root
-    driver-class-name: org.mariadb.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-  main:
-    web-application-type: none
+  serverport: 8887
+  port: 8080
+  serveradresse: "0.0.0.0"

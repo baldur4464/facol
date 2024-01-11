@@ -5,8 +5,6 @@ import de.schmidt.ocpp.facol.config.ApplicationConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
@@ -23,7 +21,7 @@ public class JsonServerImpl {
 
     @PostConstruct
     public void startServer() throws Exception {
-        server.open("0.0.0.0", applicationConfiguration.getServerPort(), serverEvents);
+        server.open(applicationConfiguration.getServerAdresse(), applicationConfiguration.getServerPort(), serverEvents);
     }
 }
 
