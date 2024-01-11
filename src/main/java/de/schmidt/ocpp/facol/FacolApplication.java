@@ -33,6 +33,8 @@ public class FacolApplication
 
     private static TestSmartChargingProfile testSmartCharging;
 
+    private static TestFirmwareManagementProfile testFirmwareManagement;
+
     @Autowired
     private TestCoreProfile tTestCore;
 
@@ -51,14 +53,16 @@ public class FacolApplication
     @Autowired
     private TestSmartChargingProfile tTestSmartCharging;
 
+    @Autowired
+    private TestFirmwareManagementProfile tTestFirmwareUpdate;
+
     public static void main(String[] args)
     {
+
         SpringApplication.run(FacolApplication.class, args);
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int auswahl = -1;
-
-
-
 
         while(true) {
 
@@ -126,7 +130,6 @@ public class FacolApplication
                     testReservation.testReservationNow(UUID.fromString(session.getSessionUuid()));
                     sleep(5000);
                     testReservation.testCancelReservation(UUID.fromString(session.getSessionUuid()));
-                    //Firmware Management
 
                     //Smart Charging
                     testSmartCharging.testSetChargingProfile(UUID.fromString(session.getSessionUuid()));
@@ -134,6 +137,12 @@ public class FacolApplication
                     testSmartCharging.testGetCompositeSchedule(UUID.fromString(session.getSessionUuid()));
                     sleep(1000);
                     testSmartCharging.testClearChargingProfile(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+
+                    //Test Firmware Managment
+                    testFirmwareManagement.testUpdateFirmwareConfirmation(UUID.fromString(session.getSessionUuid()));
+                    sleep(1000);
+                    testFirmwareManagement.testGetDiagonisticsConfirmation(UUID.fromString(session.getSessionUuid()));
                     sleep(1000);
                 }
             }
@@ -149,6 +158,7 @@ public class FacolApplication
         FacolApplication.testReservation = tTestReservation;
         FacolApplication.testLocalAuthList = tTestAuthList;
         FacolApplication.testSmartCharging = tTestSmartCharging;
+        FacolApplication.testFirmwareManagement = tTestFirmwareUpdate;
     }
 
     private static void sleep(int millis) {

@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -51,11 +52,17 @@ public class ServerCoreProfileConfig {
     @Autowired
     private SampledValueRepository sampledValueRepository;
 
-    @Autowired
+
     private TestCoreProfile tester;
 
     @Autowired
     private ProfileTestController testController;
+
+    //setter Injection
+    @Autowired
+    public void setTester(@Lazy TestCoreProfile tester) {
+        this.tester = tester;
+    }
 
     @Bean
     public ServerCoreEventHandler getCoreEventHandler() {
@@ -71,7 +78,7 @@ public class ServerCoreProfileConfig {
                 idTagInfo.setParentIdTag("");
                 idTagInfo.setStatus(AuthorizationStatus.Invalid);
 
-                tester.testAuthorizeReq(sessionIndex, request);
+                //tester.testAuthorizeReq(sessionIndex, request);
 
                 if(idTagRepository.findByIdTagIdentifier(request.getIdTag()) != null) {
                     idTagInfo.setExpiryDate(ZonedDateTime.now());
@@ -95,7 +102,7 @@ public class ServerCoreProfileConfig {
 
                 Chargepoint chargepoint = session.getChargepoint();
                 if(chargepoint != null) {
-                    tester.testBootNotificationReq(sessionIndex, request);
+                    //tester.testBootNotificationReq(sessionIndex, request);
 
                     chargepoint.setChargepointModel(request.getChargePointModel());
                     chargepoint.setChargepointVendor(request.getChargePointVendor());
@@ -121,9 +128,9 @@ public class ServerCoreProfileConfig {
 
                 System.out.println(request);
 
-                tester.testHeartbeatReq(sessionIndex, request);
+                //tester.testHeartbeatReq(sessionIndex, request);
 
-                return new HeartbeatConfirmation(); // returning null means unsupported feature
+                return new HeartbeatConfirmation(ZonedDateTime.now()); // returning null means unsupported feature
             }
 
             @Override
@@ -131,7 +138,7 @@ public class ServerCoreProfileConfig {
 
                 MeterValue metervalue = null;
 
-                tester.testMeterValueReq(sessionIndex, request);
+                //tester.testMeterValueReq(sessionIndex, request);
 
                 for(eu.chargetime.ocpp.model.core.MeterValue ocppMeterValue: request.getMeterValue())
                 {
@@ -208,7 +215,7 @@ public class ServerCoreProfileConfig {
                     List<Connector> connectors = connectorRepository.findConnectorsByChargepointId(session.getChargepoint());
                     ProfileTest test = testController.getProfileTestBySessionUuid(sessionIndex);
 
-                    tester.testStartTransactionReq(sessionIndex, request);
+                    //tester.testStartTransactionReq(sessionIndex, request);
 
                     for(Connector connector: connectors) {
                         if(connector.getConnectorId().equals(Long.valueOf(request.getConnectorId())))
@@ -245,7 +252,7 @@ public class ServerCoreProfileConfig {
                 Session session = sessionRepository.findSessionBySessionUuid(sessionIndex.toString());
                 List<Connector> connectors = connectorRepository.findConnectorsByChargepointId(session.getChargepoint());
 
-                tester.testStatusNotificationReq(sessionIndex, request);
+                //tester.testStatusNotificationReq(sessionIndex, request);
 
                 for (Connector connector: connectors) {
                     if(connector.getConnectorId() == Long.valueOf(request.getConnectorId())){
@@ -279,7 +286,7 @@ public class ServerCoreProfileConfig {
                     Transaction transaction = transactionOpt.get();
 
                     if(request.getTransactionId().equals(transaction.getTransactionId().intValue())) {
-                        tester.testStopTransactionReq(sessionIndex, request);
+                        //tester.testStopTransactionReq(sessionIndex, request);
 
                         transaction.setStopValue(Long.valueOf(request.getMeterStop()));
                         transaction.setStopTimeStamp(request.getTimestamp());
@@ -294,10 +301,6 @@ public class ServerCoreProfileConfig {
                 transactionConfirmation.setIdTagInfo(idTagInfo);
 
                 return transactionConfirmation;
-            }
-
-            public UnlockConnectorConfirmation handleUnlockRequest(UUID sessionIndex, UnlockConnectorRequest request) {
-                return null;
             }
         };
     }

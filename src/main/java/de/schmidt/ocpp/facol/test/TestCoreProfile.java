@@ -2,7 +2,7 @@ package de.schmidt.ocpp.facol.test;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import de.schmidt.ocpp.facol.model.Chargepoint;
+
 import de.schmidt.ocpp.facol.repository.ConnectorRepository;
 import de.schmidt.ocpp.facol.repository.SessionRepository;
 import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
@@ -12,10 +12,10 @@ import eu.chargetime.ocpp.NotConnectedException;
 import eu.chargetime.ocpp.OccurenceConstraintException;
 import eu.chargetime.ocpp.UnsupportedFeatureException;
 import eu.chargetime.ocpp.model.core.*;
-import eu.chargetime.ocpp.model.remotetrigger.TriggerMessageRequest;
-import eu.chargetime.ocpp.model.remotetrigger.TriggerMessageRequestType;
+
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ public class TestCoreProfile {
     @Autowired
    private ProfileTestController testController;
 
-    @Autowired
+
     private JSONServer server;
 
     @Autowired
@@ -33,6 +33,13 @@ public class TestCoreProfile {
 
     @Autowired
     private ConnectorRepository connectorRepo;
+
+
+    //Setter Injection
+    @Autowired
+    public void setJsonServer (@Lazy JSONServer server) {
+        this.server = server;
+    }
 
     /*
      * Hier werden eingehende Nachrichten getestet.
@@ -239,7 +246,7 @@ public class TestCoreProfile {
         ExtentTest test = reporter.createTest("Test RemoteStartTransaction.conf");
         RemoteStartTransactionRequest request = new RemoteStartTransactionRequest("zero");
 
-        profileTest.setConnectorId(1);
+        profileTest.setConnectorId(0);
         testController.updateProfileTest(profileTest);
 
         try {
@@ -269,6 +276,7 @@ public class TestCoreProfile {
 
         RemoteStopTransactionRequest request = new RemoteStopTransactionRequest((int)profileTest.getTransactionId());
 
+
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
                 if(confirmation.toString().contains("Accepted")){
@@ -284,6 +292,7 @@ public class TestCoreProfile {
         } catch (NotConnectedException e) {
             test.fail(new RuntimeException(e));
         }
+
         reporter.flush();
     }
 
@@ -295,6 +304,7 @@ public class TestCoreProfile {
 
         ChangeAvailabilityRequest request = new ChangeAvailabilityRequest(1, AvailabilityType.Operative);
 
+
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
                 System.out.println(confirmation.toString());
@@ -307,6 +317,7 @@ public class TestCoreProfile {
         } catch (NotConnectedException e) {
             test.fail(new RuntimeException(e));
         }
+
         reporter.flush();
     }
 
@@ -318,6 +329,7 @@ public class TestCoreProfile {
 
         ChangeConfigurationRequest request = new ChangeConfigurationRequest("test", "test");
 
+
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
                 System.out.println(confirmation.toString());
@@ -330,6 +342,7 @@ public class TestCoreProfile {
         } catch (NotConnectedException e) {
             test.fail(new RuntimeException(e));
         }
+
         reporter.flush();
     }
 
@@ -341,6 +354,7 @@ public class TestCoreProfile {
 
         ClearCacheRequest request = new ClearCacheRequest();
 
+
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
                 System.out.println(confirmation.toString());
@@ -353,6 +367,7 @@ public class TestCoreProfile {
         } catch (NotConnectedException e) {
             test.fail(new RuntimeException(e));
         }
+
         reporter.flush();
     }
 
@@ -364,6 +379,7 @@ public class TestCoreProfile {
 
         GetConfigurationRequest request = new GetConfigurationRequest();
 
+
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
                 System.out.println(confirmation.toString());
@@ -376,6 +392,7 @@ public class TestCoreProfile {
         } catch (NotConnectedException e) {
             test.fail(new RuntimeException(e));
         }
+
         reporter.flush();
     }
 
@@ -386,6 +403,7 @@ public class TestCoreProfile {
         ExtentTest test = reporter.createTest("Test UnlockConnector.conf");
 
         UnlockConnectorRequest request = new UnlockConnectorRequest(1);
+
 
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
@@ -399,6 +417,7 @@ public class TestCoreProfile {
         } catch (NotConnectedException e) {
             test.fail(new RuntimeException(e));
         }
+
         reporter.flush();
     }
 }

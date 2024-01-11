@@ -3,6 +3,7 @@ package de.schmidt.ocpp.facol.server;
 import eu.chargetime.ocpp.*;
 import de.schmidt.ocpp.facol.config.ApplicationConfiguration;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
@@ -12,8 +13,8 @@ import javax.annotation.PostConstruct;
 
 @Slf4j
 @Component
-@DependsOn({"chargepointConfig","applicationConfig", "jsonServerConfig", "serverCoreProfileConfig", "serverEventConfig"})
 @AllArgsConstructor
+@Getter
 public class JsonServerImpl {
 
     private final ServerEvents serverEvents;
@@ -22,7 +23,7 @@ public class JsonServerImpl {
 
     @PostConstruct
     public void startServer() throws Exception {
-        server.open(applicationConfiguration.getServerAddress(), applicationConfiguration.getServerPort(), serverEvents);
+        server.open("0.0.0.0", applicationConfiguration.getServerPort(), serverEvents);
     }
 }
 

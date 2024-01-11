@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TestReservationProfileConfig {
-
     @Bean
     public TestReservationProfile getTestReservationProfile() {
         return new TestReservationProfile();

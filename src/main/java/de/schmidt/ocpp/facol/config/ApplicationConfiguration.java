@@ -10,14 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class ApplicationConfiguration {
 
-        public ApplicationConfiguration() {
-                System.out.println("ApplicationConfiguration geladen");
-        }
-
-        @Value("${server.testport}")
+        @Value("${server.port}")
         private Integer serverPort;
-
-        @Value("${server.address}")
-        private String serverAddress;
 }
 

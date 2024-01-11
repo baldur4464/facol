@@ -43,15 +43,19 @@ public class ServerEventConfig {
 
     private ServerEvents getNewServerEventsImpl() {
         return new ServerEvents() {
-
+            /*
             @Override
             public void authenticateSession(SessionInformation sessionInformation, String s, byte[] bytes) throws AuthenticationException {
                 System.out.println("Authenicate Session: " + sessionInformation.getIdentifier() + " String s? = " + s + "Bytes: " + bytes.toString());
+            }*/
+
+            @Override
+            public void authenticateSession(SessionInformation information, String username, byte[] password) throws AuthenticationException {
+                System.out.println(information.getIdentifier() + " " + username + " " + password);
             }
 
             @Override
             public void newSession(UUID sessionIndex, SessionInformation information) {
-
                 String [] split = information.getIdentifier().split("/ocpp/");
                 String chargePointIdentifier = split[1];
 
@@ -81,7 +85,6 @@ public class ServerEventConfig {
                     System.out.println("session = " + session + " wurde zur Datenbank hinzugefügt");
                     sessionRepository.save(session);
                 }
-
                 // sessionIndex is used to send messages.
                 System.out.println("New session " + sessionIndex + ": " + information.getIdentifier());
             }
