@@ -17,6 +17,8 @@ import eu.chargetime.ocpp.model.smartcharging.SetChargingProfileRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -42,15 +44,23 @@ public class TestSmartChargingProfile {
         ExtentTest test = reporter.createTest("Test SetChargingProfile.Conf");
 
         ChargingSchedulePeriod period1 = new ChargingSchedulePeriod(0, 30d);
+
         ChargingSchedulePeriod[] periodArray = new ChargingSchedulePeriod[1];
         periodArray[0] = period1;
+
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a z");
+
+        ChargingSchedule chargingSchedule = new ChargingSchedule(ChargingRateUnitType.A, periodArray);
+        chargingSchedule.setStartSchedule(ZonedDateTime.parse("2024-01-01 00:00:00 am +02:00", df));
 
         ChargingProfile chargingProfile = new ChargingProfile(
                 1,
                 0,
                 ChargingProfilePurposeType.ChargePointMaxProfile,
-                ChargingProfileKindType.Absolute,
-                new ChargingSchedule(ChargingRateUnitType.W, periodArray));
+                ChargingProfileKindType.Recurring,
+                chargingSchedule
+                );
+        chargingProfile.setRecurrencyKind(RecurrencyKindType.Daily);
 
         SetChargingProfileRequest request = new SetChargingProfileRequest(0, chargingProfile);
 
@@ -74,23 +84,35 @@ public class TestSmartChargingProfile {
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test GetCompositeSchedule.Conf");
 
-        ChargingSchedulePeriod period1 = new ChargingSchedulePeriod(4, 30d);
-        ChargingSchedulePeriod[] periodArray = new ChargingSchedulePeriod[1];
+        ChargingSchedulePeriod period1 = new ChargingSchedulePeriod(0, 16d);
+        ChargingSchedulePeriod period2 = new ChargingSchedulePeriod(28800, 0d);
+        ChargingSchedulePeriod period3 = new ChargingSchedulePeriod(57600, 16d);
+        ChargingSchedulePeriod period4 = new ChargingSchedulePeriod(86400, 0d);
+        ChargingSchedulePeriod[] periodArray = new ChargingSchedulePeriod[4];
         periodArray[0] = period1;
+        periodArray[1] = period2;
+        periodArray[2] = period3;
+        periodArray[3] = period4;
+
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a z");
+
+        ChargingSchedule chargingSchedule = new ChargingSchedule(ChargingRateUnitType.A, periodArray);
+        chargingSchedule.setStartSchedule(ZonedDateTime.parse("2024-01-01 00:00:00 am +02:00", df));
 
         ChargingProfile chargingProfile = new ChargingProfile(
                 1,
                 0,
                 ChargingProfilePurposeType.ChargePointMaxProfile,
-                ChargingProfileKindType.Absolute,
-                new ChargingSchedule(ChargingRateUnitType.W, periodArray));
+                ChargingProfileKindType.Recurring,
+                chargingSchedule
+        );
+        chargingProfile.setRecurrencyKind(RecurrencyKindType.Daily);
 
-        RemoteStartTransactionRequest chargingRequest = new RemoteStartTransactionRequest("zero");
-        chargingRequest.setConnectorId(1);
-        chargingRequest.setChargingProfile(chargingProfile);
+        SetChargingProfileRequest chargeRequest = new SetChargingProfileRequest(0, chargingProfile);
+        chargeRequest.setConnectorId(0);
 
         try {
-            server.send(sessionIndex, chargingRequest);
+            server.send(sessionIndex, chargeRequest);
         } catch (OccurenceConstraintException e) {
             test.fail(new RuntimeException(e));
         } catch (UnsupportedFeatureException e) {
@@ -105,7 +127,7 @@ public class TestSmartChargingProfile {
             throw new RuntimeException(e);
         }
 
-        GetCompositeScheduleRequest request = new GetCompositeScheduleRequest(1, 0);
+        GetCompositeScheduleRequest request = new GetCompositeScheduleRequest(0, 86400);
 
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {

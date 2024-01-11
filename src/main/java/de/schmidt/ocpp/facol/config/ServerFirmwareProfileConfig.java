@@ -18,8 +18,6 @@ import org.springframework.context.annotation.Lazy;
 import java.util.UUID;
 @Configuration
 public class ServerFirmwareProfileConfig {
-
-
     private TestFirmwareManagementProfile tester;
 
     //Setter Injection

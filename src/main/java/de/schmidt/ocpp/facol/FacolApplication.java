@@ -58,12 +58,11 @@ public class FacolApplication
 
     public static void main(String[] args)
     {
+
         SpringApplication.run(FacolApplication.class, args);
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int auswahl = -1;
-
-
-
 
         while(true) {
 

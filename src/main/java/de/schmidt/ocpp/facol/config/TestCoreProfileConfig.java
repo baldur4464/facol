@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TestCoreProfileConfig {
-
     @Bean
     public TestCoreProfile getTestCoreProfile() {
         return new TestCoreProfile();

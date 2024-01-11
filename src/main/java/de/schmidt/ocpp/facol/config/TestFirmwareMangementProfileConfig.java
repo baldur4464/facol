@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Lazy;
 @Lazy
 @Configuration
 public class TestFirmwareMangementProfileConfig {
-
     @Bean
     public TestFirmwareManagementProfile getTestFirmwareManagementProfile() {
         return new TestFirmwareManagementProfile();

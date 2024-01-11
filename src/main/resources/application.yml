@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8887
 spring:
   datasource:
     #docker pull mariadb
@@ -12,5 +12,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+    show-sql: true
   main:
     web-application-type: none

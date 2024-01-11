@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TestLocalAuthListProfileConfig {
-
-
     @Bean
     public TestLocalAuthListProfile getTestLocalAuthListProfile() {
         return new TestLocalAuthListProfile();

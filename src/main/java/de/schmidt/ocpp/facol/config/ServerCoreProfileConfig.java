@@ -130,7 +130,7 @@ public class ServerCoreProfileConfig {
 
                 //tester.testHeartbeatReq(sessionIndex, request);
 
-                return new HeartbeatConfirmation(); // returning null means unsupported feature
+                return new HeartbeatConfirmation(ZonedDateTime.now()); // returning null means unsupported feature
             }
 
             @Override
