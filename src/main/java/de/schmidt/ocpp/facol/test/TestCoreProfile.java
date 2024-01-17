@@ -23,7 +23,7 @@ import java.util.UUID;
 public class TestCoreProfile {
 
     @Autowired
-   private ProfileTestController testController;
+    private ProfileTestController testController;
 
 
     private JSONServer server;
@@ -37,7 +37,7 @@ public class TestCoreProfile {
 
     //Setter Injection
     @Autowired
-    public void setJsonServer (@Lazy JSONServer server) {
+    public void setJsonServer(@Lazy JSONServer server) {
         this.server = server;
     }
 
@@ -55,10 +55,10 @@ public class TestCoreProfile {
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test Authorize.req");
 
-        if(request.getIdTag().contains(profileTest.getIdTag())) {
+        if (request.getIdTag().contains(profileTest.getIdTag())) {
             test.pass(request.toString());
         } else {
-            test.fail("Wrong idTag: " + request.toString());
+            test.fail("Wrong idTag: " + request);
         }
         reporter.flush();
     }
@@ -84,10 +84,10 @@ public class TestCoreProfile {
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test Bootnotification.req");
 
-        if(request.getChargePointModel() != null && request.getChargePointVendor() != null) {
+        if (request.getChargePointModel() != null && request.getChargePointVendor() != null) {
             test.pass(request.toString());
         } else {
-            test.fail("The requirements were not met: " + request.toString());
+            test.fail("The requirements were not met: " + request);
         }
         reporter.flush();
     }
@@ -110,14 +110,13 @@ public class TestCoreProfile {
         ExtentTest test = reporter.createTest("Test StartTransaction.req");
 
         if (request.getConnectorId() != null && request.getMeterStart() != null && request.getIdTag() != null && request.getTimestamp() != null) {
-            if(request.getConnectorId() == profileTest.getConnectorId()) {
+            if (request.getConnectorId() == profileTest.getConnectorId()) {
                 test.pass("Correct Connector ID");
             } else {
                 test.fail("Wrong Connector ID");
             }
 
-            if(request.getIdTag().equals(profileTest.getIdTag()))
-            {
+            if (request.getIdTag().equals(profileTest.getIdTag())) {
                 test.pass("Correct IdTag");
             } else {
                 test.fail("Wrong IdTag");
@@ -125,7 +124,7 @@ public class TestCoreProfile {
 
             test.pass(request.toString());
         } else {
-            test.fail(" The requirments were not met: " + request.toString());
+            test.fail(" The requirments were not met: " + request);
         }
 
         reporter.flush();
@@ -149,13 +148,12 @@ public class TestCoreProfile {
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test StopTransaction.req");
 
-        if(request.getMeterStop() != null && request.getTimestamp() != null && request.getTransactionId() != 0) {
+        if (request.getMeterStop() != null && request.getTimestamp() != null && request.getTransactionId() != 0) {
 
-            if(request.getTransactionId() == profileTest.getTransactionId())
-            {
+            if (request.getTransactionId() == profileTest.getTransactionId()) {
                 test.pass("Correct TransactionId");
             } else {
-                test.fail("Wrong TransactionId: " + request.getTransactionId() +  " instead of " + profileTest.getTransactionId());
+                test.fail("Wrong TransactionId: " + request.getTransactionId() + " instead of " + profileTest.getTransactionId());
             }
 
             test.pass(request.toString());
@@ -169,7 +167,7 @@ public class TestCoreProfile {
         //Test DataTransfer Request
     }
 
-    public void testHeartbeatReq (UUID sessionIndex, HeartbeatRequest request) {
+    public void testHeartbeatReq(UUID sessionIndex, HeartbeatRequest request) {
         //Test DataTransfer Request
         /*
          * Require:
@@ -202,10 +200,10 @@ public class TestCoreProfile {
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test MeterValue.req");
 
-        if(request.getMeterValue() != null && request.getConnectorId()!= null) {
+        if (request.getMeterValue() != null && request.getConnectorId() != null) {
             test.pass(request.toString());
         } else {
-            test.fail("The requirements were not met: " + request.toString());
+            test.fail("The requirements were not met: " + request);
         }
         reporter.flush();
     }
@@ -226,10 +224,10 @@ public class TestCoreProfile {
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test StatusNotification.req");
 
-        if(request.getConnectorId() != null && request.getErrorCode() != null && request.getStatus() != null){
+        if (request.getConnectorId() != null && request.getErrorCode() != null && request.getStatus() != null) {
             test.pass(request.toString());
         } else {
-            test.fail("The requirements were not met: " + request.toString());
+            test.fail("The requirements were not met: " + request);
         }
         reporter.flush();
     }
@@ -251,8 +249,7 @@ public class TestCoreProfile {
 
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
-                if(confirmation.toString().contains("Accepted"))
-                {
+                if (confirmation.toString().contains("Accepted")) {
                     test.pass(confirmation.toString());
                 } else {
                     test.pass(confirmation.toString());
@@ -274,12 +271,12 @@ public class TestCoreProfile {
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test RemoteStoptransaction.conf");
 
-        RemoteStopTransactionRequest request = new RemoteStopTransactionRequest((int)profileTest.getTransactionId());
+        RemoteStopTransactionRequest request = new RemoteStopTransactionRequest((int) profileTest.getTransactionId());
 
 
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
-                if(confirmation.toString().contains("Accepted")){
+                if (confirmation.toString().contains("Accepted")) {
                     test.pass(confirmation.toString());
                 } else {
                     test.pass(confirmation.toString());

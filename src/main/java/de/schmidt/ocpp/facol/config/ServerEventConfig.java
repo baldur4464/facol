@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
-@Configuration ("serverEventConfig")
+@Configuration("serverEventConfig")
 @Getter
 @Slf4j
 public class ServerEventConfig {
@@ -56,16 +56,16 @@ public class ServerEventConfig {
 
             @Override
             public void newSession(UUID sessionIndex, SessionInformation information) {
-                String [] split = information.getIdentifier().split("/ocpp/");
+                String[] split = information.getIdentifier().split("/ocpp/");
                 String chargePointIdentifier = split[1];
 
-                if(chargepointRepository.existsById(chargePointIdentifier)) {
+                if (chargepointRepository.existsById(chargePointIdentifier)) {
                     Optional<Chargepoint> chargepointOpt = chargepointRepository.findById(chargePointIdentifier);
                     Chargepoint chargepoint = chargepointOpt.get();
 
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu_MM_dd_HHmmss");
 
-                    ExtentSparkReporter spark = new ExtentSparkReporter("reports/report_" + dtf.format(LocalDateTime.now())  +  ".html");
+                    ExtentSparkReporter spark = new ExtentSparkReporter("reports/report_" + dtf.format(LocalDateTime.now()) + ".html");
                     ExtentReports extent = new ExtentReports();
                     extent.attachReporter(spark);
 

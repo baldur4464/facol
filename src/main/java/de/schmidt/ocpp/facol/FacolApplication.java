@@ -3,14 +3,9 @@ package de.schmidt.ocpp.facol;
 import de.schmidt.ocpp.facol.model.Session;
 import de.schmidt.ocpp.facol.repository.SessionRepository;
 import de.schmidt.ocpp.facol.test.*;
-import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
-import de.schmidt.ocpp.facol.test.model.ProfileTest;
-import eu.chargetime.ocpp.JSONServer;
-import eu.chargetime.ocpp.feature.profile.ServerRemoteTriggerProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,8 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SpringBootApplication
-public class FacolApplication
-{
+public class FacolApplication {
 
     private static TestCoreProfile testCore;
 
@@ -56,33 +50,32 @@ public class FacolApplication
     @Autowired
     private TestFirmwareManagementProfile tTestFirmwareUpdate;
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
 
         SpringApplication.run(FacolApplication.class, args);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int auswahl = -1;
 
-        while(true) {
+        while (true) {
 
 
             List<Session> sessions = sessionRepo.findAll();
 
-            if(sessions.size() != 0) {
+            if (sessions.size() != 0) {
                 System.out.println("Wähle ein verfügbare Session zum Testen: ");
                 for (int i = 0; i < sessions.size(); i++) {
-                    System.out.println("[" + i + "]" + " " + sessions.get(i).getSessionUuid().toString() + " : " + sessions.get(i).getChargepoint().getChargepointId());
+                    System.out.println("[" + i + "]" + " " + sessions.get(i).getSessionUuid() + " : " + sessions.get(i).getChargepoint().getChargepointId());
                 }
                 System.out.println("Eingabe: ");
-                try{
+                try {
                     auswahl = Integer.parseInt(br.readLine());
                 } catch (Exception e) {
                     auswahl = -1;
                     e.printStackTrace();
                 }
 
-                if(auswahl >= 0 && auswahl >= sessions.size() - 1 ) {
+                if (auswahl >= 0 && auswahl >= sessions.size() - 1) {
                     Session session = sessions.get(auswahl);
 
 

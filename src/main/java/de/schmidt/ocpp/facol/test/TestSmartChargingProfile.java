@@ -19,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -59,7 +57,7 @@ public class TestSmartChargingProfile {
                 ChargingProfilePurposeType.ChargePointMaxProfile,
                 ChargingProfileKindType.Recurring,
                 chargingSchedule
-                );
+        );
         chargingProfile.setRecurrencyKind(RecurrencyKindType.Daily);
 
         SetChargingProfileRequest request = new SetChargingProfileRequest(0, chargingProfile);

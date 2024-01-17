@@ -4,7 +4,6 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import de.schmidt.ocpp.facol.repository.ConnectorRepository;
 import de.schmidt.ocpp.facol.repository.SessionRepository;
-import de.schmidt.ocpp.facol.server.JsonServerImpl;
 import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
 import de.schmidt.ocpp.facol.test.model.ProfileTest;
 import eu.chargetime.ocpp.JSONServer;

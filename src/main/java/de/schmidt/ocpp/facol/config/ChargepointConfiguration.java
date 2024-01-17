@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 
-@Configuration ("chargepointConfig")
+@Configuration("chargepointConfig")
 public class ChargepointConfiguration {
 
     @Autowired
@@ -20,18 +19,18 @@ public class ChargepointConfiguration {
     @Autowired
     private IdTagRepository idTagRepository;
 
-    public ChargepointConfiguration () {
+    public ChargepointConfiguration() {
         System.out.println("chargepointConfig geladen");
     }
 
     @Bean
-    public CommandLineRunner run () throws Exception {
+    public CommandLineRunner run() throws Exception {
         return args -> {
             Chargepoint chargepoint = Chargepoint.builder()
                     .chargepointId("ChargePointTest")
                     .build();
 
-            if(!chargepointRepository.existsById(chargepoint.getChargepointId())) {
+            if (!chargepointRepository.existsById(chargepoint.getChargepointId())) {
                 chargepointRepository.save(chargepoint);
                 System.out.println("Chargepoint " + chargepoint.getChargepointId() + " wurde zur Datenbank hinzugeügt");
             } else {
@@ -42,7 +41,7 @@ public class ChargepointConfiguration {
                     .idTagIdentifier("zero")
                     .build();
 
-            if(idTagRepository.findByIdTagIdentifier(idTag.getIdTagIdentifier()) == null) {
+            if (idTagRepository.findByIdTagIdentifier(idTag.getIdTagIdentifier()) == null) {
                 idTagRepository.save(idTag);
                 System.out.println("IdTag " + idTag.getIdTagIdentifier() + " wurde zur Datenbank hinzugeügt");
             } else {

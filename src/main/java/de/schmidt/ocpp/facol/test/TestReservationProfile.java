@@ -4,10 +4,8 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import de.schmidt.ocpp.facol.model.Connector;
 import de.schmidt.ocpp.facol.model.Reservation;
-import de.schmidt.ocpp.facol.model.Transaction;
 import de.schmidt.ocpp.facol.repository.ConnectorRepository;
 import de.schmidt.ocpp.facol.repository.ReservationRepository;
-import de.schmidt.ocpp.facol.repository.SessionRepository;
 import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
 import de.schmidt.ocpp.facol.test.model.ProfileTest;
 import eu.chargetime.ocpp.JSONServer;
@@ -34,16 +32,13 @@ public class TestReservationProfile {
     private JSONServer server;
 
     @Autowired
-    private SessionRepository sessionRepo;
-
-    @Autowired
     private ReservationRepository reservationRepo;
 
     @Autowired
     private ConnectorRepository connectorRepo;
 
     //Test Reservation
-    public void testReservationNow (UUID sessionIndex) {
+    public void testReservationNow(UUID sessionIndex) {
 
         ProfileTest profileTest = testController.getProfileTestBySessionUuid(sessionIndex);
         ExtentReports reporter = profileTest.getReporter();
@@ -52,7 +47,7 @@ public class TestReservationProfile {
         Optional<Connector> connectorOpt = connectorRepo.findById(2l);
 
 
-        if(!connectorOpt.isPresent())
+        if (!connectorOpt.isPresent())
             return;
 
         Connector connector = connectorOpt.get();
@@ -140,7 +135,7 @@ public class TestReservationProfile {
         Optional<Connector> connectorOpt = connectorRepo.findById(2l);
 
 
-        if(!connectorOpt.isPresent())
+        if (!connectorOpt.isPresent())
             return;
 
         Connector connector = connectorOpt.get();

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class ProfileTestControllerConfig {
 
     @Bean
-    public ProfileTestController getProfileTestController () {
+    public ProfileTestController getProfileTestController() {
         return ProfileTestController.builder()
                 .profileTests(new ArrayList<>())
                 .build();

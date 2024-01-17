@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -35,6 +34,6 @@ public class MeterValue {
     )
     private Connector connector;
 
-    @OneToMany (cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<SampledValue> sampledValue;
 }

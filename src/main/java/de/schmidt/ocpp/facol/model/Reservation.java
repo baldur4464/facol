@@ -34,7 +34,7 @@ public class Reservation {
 
     private String parentIdTag;
 
-    @OneToOne (cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(
             name = "connector_pk",
             referencedColumnName = "connectorPK"

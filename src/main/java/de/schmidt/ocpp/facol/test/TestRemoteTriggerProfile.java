@@ -36,7 +36,7 @@ public class TestRemoteTriggerProfile {
     //Trigger Messages
 
     //Bootnotification
-    public void testTriggerBootnotification(UUID sessionIndex){
+    public void testTriggerBootnotification(UUID sessionIndex) {
         ProfileTest profileTest = testController.getProfileTestBySessionUuid(sessionIndex);
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test Bootnotification Triggermessage.conf");
@@ -59,7 +59,7 @@ public class TestRemoteTriggerProfile {
         reporter.flush();
     }
 
-    public void testTriggerDiagnosticsStatusNotification(UUID sessionIndex){
+    public void testTriggerDiagnosticsStatusNotification(UUID sessionIndex) {
         ProfileTest profileTest = testController.getProfileTestBySessionUuid(sessionIndex);
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test DiagonsticsStatusNotification Triggermessage.conf");
@@ -87,7 +87,7 @@ public class TestRemoteTriggerProfile {
         reporter.flush();
     }
 
-    public void testTriggerFirmwareStatusNotification(UUID sessionIndex){
+    public void testTriggerFirmwareStatusNotification(UUID sessionIndex) {
         ProfileTest profileTest = testController.getProfileTestBySessionUuid(sessionIndex);
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test FirmwareStatusNotification Triggermessage.conf");
@@ -114,7 +114,7 @@ public class TestRemoteTriggerProfile {
         reporter.flush();
     }
 
-    public void testTriggerHeartbeat(UUID sessionIndex){
+    public void testTriggerHeartbeat(UUID sessionIndex) {
         ProfileTest profileTest = testController.getProfileTestBySessionUuid(sessionIndex);
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test Heartbeat Triggermessage.conf");
@@ -138,7 +138,7 @@ public class TestRemoteTriggerProfile {
         reporter.flush();
     }
 
-    public void testTriggerMeterValues(UUID sessionIndex){
+    public void testTriggerMeterValues(UUID sessionIndex) {
         ProfileTest profileTest = testController.getProfileTestBySessionUuid(sessionIndex);
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test MeterValues Triggermessage.conf");
@@ -162,7 +162,7 @@ public class TestRemoteTriggerProfile {
         reporter.flush();
     }
 
-    public void testTriggerStatusNotification(UUID sessionIndex){
+    public void testTriggerStatusNotification(UUID sessionIndex) {
         ProfileTest profileTest = testController.getProfileTestBySessionUuid(sessionIndex);
         ExtentReports reporter = profileTest.getReporter();
         ExtentTest test = reporter.createTest("Test StatusNotification Triggermessage.conf");

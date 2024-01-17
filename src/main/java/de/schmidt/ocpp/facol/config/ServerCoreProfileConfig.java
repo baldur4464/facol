@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Configuration ("serverCoreProfileConfig")
+@Configuration("serverCoreProfileConfig")
 @Getter
 @Slf4j
 public class ServerCoreProfileConfig {
@@ -80,7 +80,7 @@ public class ServerCoreProfileConfig {
 
                 //tester.testAuthorizeReq(sessionIndex, request);
 
-                if(idTagRepository.findByIdTagIdentifier(request.getIdTag()) != null) {
+                if (idTagRepository.findByIdTagIdentifier(request.getIdTag()) != null) {
                     idTagInfo.setExpiryDate(ZonedDateTime.now());
                     idTagInfo.setParentIdTag("");
                     idTagInfo.setStatus(AuthorizationStatus.Accepted);
@@ -101,7 +101,7 @@ public class ServerCoreProfileConfig {
                 Session session = sessionRepository.findSessionBySessionUuid(sessionIndex.toString());
 
                 Chargepoint chargepoint = session.getChargepoint();
-                if(chargepoint != null) {
+                if (chargepoint != null) {
                     //tester.testBootNotificationReq(sessionIndex, request);
 
                     chargepoint.setChargepointModel(request.getChargePointModel());
@@ -140,30 +140,28 @@ public class ServerCoreProfileConfig {
 
                 //tester.testMeterValueReq(sessionIndex, request);
 
-                for(eu.chargetime.ocpp.model.core.MeterValue ocppMeterValue: request.getMeterValue())
-                {
+                for (eu.chargetime.ocpp.model.core.MeterValue ocppMeterValue : request.getMeterValue()) {
                     List<SampledValue> sampledValues = new ArrayList<>();
 
-                    for(eu.chargetime.ocpp.model.core.SampledValue ocppSampledValue: ocppMeterValue.getSampledValue())
-                    {
-                         SampledValue sampledValue = SampledValue.builder()
-                                 .rawValue(Long.valueOf(ocppSampledValue.getValue()))
-                                 .phase(ocppSampledValue.getPhase())
-                                 .valueFormat(ocppSampledValue.getFormat().name())
-                                 .location(ocppSampledValue.getLocation().name())
-                                 .context(ocppSampledValue.getContext())
-                                 .measurand(ocppSampledValue.getMeasurand())
-                                 .unitOfMeasure(ocppSampledValue.getPhase())
-                                 .build();
+                    for (eu.chargetime.ocpp.model.core.SampledValue ocppSampledValue : ocppMeterValue.getSampledValue()) {
+                        SampledValue sampledValue = SampledValue.builder()
+                                .rawValue(Long.valueOf(ocppSampledValue.getValue()))
+                                .phase(ocppSampledValue.getPhase())
+                                .valueFormat(ocppSampledValue.getFormat().name())
+                                .location(ocppSampledValue.getLocation().name())
+                                .context(ocppSampledValue.getContext())
+                                .measurand(ocppSampledValue.getMeasurand())
+                                .unitOfMeasure(ocppSampledValue.getPhase())
+                                .build();
 
-                         sampledValue = sampledValueRepository.save(sampledValue);
+                        sampledValue = sampledValueRepository.save(sampledValue);
 
-                         sampledValues.add(sampledValue);
+                        sampledValues.add(sampledValue);
                     }
 
                     Connector connector = connectorRepository.findConnectorByConnectorId(Long.valueOf(request.getConnectorId()));
 
-                    if(connector != null) {
+                    if (connector != null) {
 
                         metervalue = MeterValue.builder()
                                 .connector(connector)
@@ -172,14 +170,12 @@ public class ServerCoreProfileConfig {
                         metervalue = meterValueRepository.save(metervalue);
                     }
 
-                    if(request.getTransactionId() != null)
-                    {
+                    if (request.getTransactionId() != null) {
                         Optional<Transaction> optTransaction = transactionRepository.findById(Long.valueOf(request.getTransactionId()));
-                        if(optTransaction.isPresent() && metervalue != null)
-                        {
+                        if (optTransaction.isPresent() && metervalue != null) {
                             Transaction transaction = optTransaction.get();
                             List<MeterValue> meterValues;
-                            if(transaction.getMeterValues() == null){
+                            if (transaction.getMeterValues() == null) {
                                 meterValues = new ArrayList<>();
                             } else {
                                 meterValues = transaction.getMeterValues();
@@ -210,16 +206,15 @@ public class ServerCoreProfileConfig {
 
                 transactionConfirmation.setIdTagInfo(idTagInfo);
 
-                if(idTagRepository.findByIdTagIdentifier(request.getIdTag()) != null) {
+                if (idTagRepository.findByIdTagIdentifier(request.getIdTag()) != null) {
                     Session session = sessionRepository.findSessionBySessionUuid(sessionIndex.toString());
                     List<Connector> connectors = connectorRepository.findConnectorsByChargepointId(session.getChargepoint());
                     ProfileTest test = testController.getProfileTestBySessionUuid(sessionIndex);
 
                     //tester.testStartTransactionReq(sessionIndex, request);
 
-                    for(Connector connector: connectors) {
-                        if(connector.getConnectorId().equals(Long.valueOf(request.getConnectorId())))
-                        {
+                    for (Connector connector : connectors) {
+                        if (connector.getConnectorId().equals(Long.valueOf(request.getConnectorId()))) {
                             Transaction transaction = Transaction.builder()
                                     .startValue(Long.valueOf(request.getMeterStart()))
                                     .startTimestamp(request.getTimestamp())
@@ -254,8 +249,8 @@ public class ServerCoreProfileConfig {
 
                 //tester.testStatusNotificationReq(sessionIndex, request);
 
-                for (Connector connector: connectors) {
-                    if(connector.getConnectorId() == Long.valueOf(request.getConnectorId())){
+                for (Connector connector : connectors) {
+                    if (connector.getConnectorId() == Long.valueOf(request.getConnectorId())) {
                         connector.setConnectorStatus(request.getStatus().toString());
                         connectorRepository.save(connector);
                         return new StatusNotificationConfirmation();
@@ -280,12 +275,11 @@ public class ServerCoreProfileConfig {
                 StopTransactionConfirmation transactionConfirmation = new StopTransactionConfirmation();
                 Optional<Transaction> transactionOpt = transactionRepository.findById(Long.valueOf(request.getTransactionId()));
 
-                if(transactionOpt.isPresent())
-                {
+                if (transactionOpt.isPresent()) {
 
                     Transaction transaction = transactionOpt.get();
 
-                    if(request.getTransactionId().equals(transaction.getTransactionId().intValue())) {
+                    if (request.getTransactionId().equals(transaction.getTransactionId().intValue())) {
                         //tester.testStopTransactionReq(sessionIndex, request);
 
                         transaction.setStopValue(Long.valueOf(request.getMeterStop()));

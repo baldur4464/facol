@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 @Entity
 @Data
@@ -37,20 +37,20 @@ public class Transaction {
 
     private Long stopValue;
 
-    @OneToOne (cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(
             name = "connector_pk",
             referencedColumnName = "connectorPk"
     )
     private Connector connector;
 
-    @OneToOne (cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(
             name = "chargepoint_id",
             referencedColumnName = "chargepointId"
     )
     private Chargepoint chargepoint;
 
-    @OneToMany (cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<MeterValue> meterValues;
 }

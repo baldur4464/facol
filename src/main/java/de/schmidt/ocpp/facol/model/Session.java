@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -30,7 +29,7 @@ public class Session {
 
     private String sessionUuid;
 
-    @OneToOne (fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "chargepoint_id",
             referencedColumnName = "chargepointId"

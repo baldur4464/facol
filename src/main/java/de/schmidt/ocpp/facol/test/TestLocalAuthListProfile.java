@@ -2,7 +2,6 @@ package de.schmidt.ocpp.facol.test;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.model.Author;
 import de.schmidt.ocpp.facol.repository.ConnectorRepository;
 import de.schmidt.ocpp.facol.repository.SessionRepository;
 import de.schmidt.ocpp.facol.test.controller.ProfileTestController;
@@ -58,14 +57,14 @@ public class TestLocalAuthListProfile {
         tagData2.setExpiryDate(ZonedDateTime.now().plusYears(1));
         data2.setIdTagInfo(tagData2);
 
-        AuthorizationData[] authArray = new AuthorizationData[] {data1, data2};
+        AuthorizationData[] authArray = new AuthorizationData[]{data1, data2};
         request.setLocalAuthorizationList(authArray);
 
         try {
             server.send(sessionIndex, request).whenComplete((confirmation, throwable) -> {
-            System.out.println(confirmation.toString());
+                System.out.println(confirmation.toString());
 
-            test.pass(confirmation.toString());
+                test.pass(confirmation.toString());
             });
         } catch (OccurenceConstraintException e) {
             throw new RuntimeException(e);
